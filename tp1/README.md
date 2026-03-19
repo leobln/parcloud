@@ -1,8 +1,8 @@
-### Part I : Docker basics
+# Part I : Docker basics
 
 ## 1. Install
 
-# 🌞 Installer Docker votre machine Azure
+### 🌞 Installer Docker votre machine Azure
 
 Install de docker
 
