@@ -97,6 +97,59 @@ CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS       
 f5bf7d2d8138   nginx     "/docker-entrypoint.…"   10 seconds ago   Up 10 seconds   80/tcp, 0.0.0.0:8888->7777/tcp, [::]:8888->7777/tcp   meow
 1d25efdd30a8   nginx     "/docker-entrypoint.…"   34 minutes ago   Up 34 minutes   0.0.0.0:9999->80/tcp, [::]:9999->80/tcp               nginx
 f8791375ea49   debian    "sleep 99999"            46 minutes ago   Up 46 minutes                                                         elated_jang
-leobln@leo-vivobook:~/Documents/travaille/parcloud/tp1$ curl http://localhost:8888
+leobln@leo-vivobook:~/Documents/travaille/parcloud/tp1$ curl http://localhost:8888 (ou: http://10.100.0.167:8888/)
 <h1>salut ! Bienvenue sur mon serveur</h1>
 ```
+
+🌞 Call me
+
+```
+leobln@leo-vivobook:~/Documents/travaille/parcloud/tp1$ curl http://10.100.0.167:8888
+<h1>salut ! Bienvenue sur mon serveur</h1>
+```
+
+# Part II : Images
+
+🌞 Construire votre propre image
+
+On garde le meme index.html
+
+On crée un fichier conf (my_apache.conf)
+```
+Listen 80
+LoadModule mpm_event_module "/usr/lib/apache2/modules/mod_mpm_event.so"
+LoadModule dir_module "/usr/lib/apache2/modules/mod_dir.so"
+LoadModule authz_core_module "/usr/lib/apache2/modules/mod_authz_core.so"
+DirectoryIndex index.html
+DocumentRoot "/var/www/html/"
+ErrorLog "/var/log/apache2/error.log"
+LogLevel warn
+```
+
+on crée un Dockerfile
+```
+FROM debian:latest
+
+RUN apt-get update && apt-get install -y apache2 && apt-get clean
+
+RUN mkdir -p /var/log/apache2
+
+COPY my_apache.conf /etc/apache2/apache2.conf
+
+COPY index.html /var/www/html/index.html
+
+EXPOSE 80
+
+CMD ["apache2", "-DFOREGROUND"]
+```
+
+Puis on crée notre image a partir du Dockerfile(c'est le .)
+```
+docker build -t mon-apache-custom .
+```
+
+Enfin on lance le docker baser sur l'image crée précedament
+```
+docker run -d --name mon-serveur-apache -p 8080:80 mon-apache-custom
+```
+
