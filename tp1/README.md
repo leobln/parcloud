@@ -2,7 +2,7 @@
 
 ## 1. Install
 
-### 🌞 Installer Docker votre machine Azure
+🌞 Installer Docker votre machine Azure
 
 Install de docker
 
@@ -153,3 +153,8 @@ Enfin on lance le docker baser sur l'image crée précedament
 docker run -d --name mon-serveur-apache -p 8080:80 mon-apache-custom
 ```
 
+Et normalement it works
+```
+leobln@leo-vivobook:~/Documents/travaille/parcloud/tp1$ curl http://localhost:8080
+<h1>salut ! Bienvenue sur mon serveur</h1>
+```
