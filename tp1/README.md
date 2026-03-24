@@ -158,3 +158,39 @@ Et normalement it works
 leobln@leo-vivobook:~/Documents/travaille/parcloud/tp1$ curl http://localhost:8080
 <h1>salut ! Bienvenue sur mon serveur</h1>
 ```
+
+## Part III : docker-compose
+
+🌞 Installez un WikiJS en utilisant Docker
+
+On commence par crée un réseaux virtuelle pour que les deux conteneurs puis communiquer
+
+```
+docker network create wikinet
+```
+
+Puis on crée nos deux conteneurs 
+```
+docker run -d \
+  --name db-wiki \
+  --network wikinet \
+  -e POSTGRES_DB=wiki \
+  -e POSTGRES_USER=wikijs \
+  -e POSTGRES_PASSWORD=wikisecret \
+  -v dwiki-db-data:/var/lib/postgresql/data \
+  postgres:15
+```
+```
+docker run -d \
+  --name wikijs \
+  --network wikinet \
+  -p 3000:3000 \
+  -e DB_TYPE=postgres \
+  -e DB_HOST=db-wiki \
+  -e DB_PORT=5432 \
+  -e DB_USER=wikijs \
+  -e DB_PASS=wikisecret \
+  -e DB_NAME=wiki \
+  -v dwiki-assets:/var/wiki \
+  requarks/wiki:2
+```
